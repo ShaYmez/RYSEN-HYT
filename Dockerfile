@@ -1,7 +1,5 @@
 FROM python:3.7-alpine
 
-
-
 ENTRYPOINT [ "/entrypoint" ]
 
 RUN adduser -D -u 54000 radio && \
