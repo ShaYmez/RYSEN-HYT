@@ -1,47 +1,51 @@
 version: '2.4'
 services:
-    #Duplicate this section for each repeater
+    #Duplicate this section for each SystemX repeater
     #do docker-compose down and then docker-compose up -d in this 
     #directory afterwards to stop and start the containers 
-    #you may need to do conntrack -F after the restart
-    RYSEN-Hytera:
-        container_name: RYSEN-Hytera
+    #do conntrack -F after the restart to flush the connection table 
+    hyt-repeater1:
+        container_name: hyt-repeater1
         ports:
-            - '50000:50000/udp'
-            - '50001:50001/udp'
-            - '50002:50002/udp'
+            # IP Site Connect
+            - '62004:62004/udp'
+            # Master Port
+            - '62005:62005/udp'
+            # DMR Voice-Data Port
+            - '62006:62006/udp'
+            # RDAC Port
+            - '62007:62007/udp'
         environment:
           #Configure Repeater server side (DMRGateway)
           #Put an Options line here to configure static TGs etc
-          - 'DMRG_OPTIONS=TS1=23590;DIAL=2350;VOICE=1;LANG=en_GB;SINGLE=1;TIMER=10;'
+          - 'DMRG_OPTIONS=PASS=SELFCARE'
             #If not empty, rewrite TS1TG9 to the TG specified
           - 'DMRG_REWRITETS1TG9='
           #Target server
-          - DMRG_TARGET=
+          - DMRG_TARGET=dmr.freestar.network
           # callsign and repeater_dmr_id, if provided will override the one read from repeater
-          - callsign=
-          - repeater_dmr_id=
+          - callsign=CALL
+          - repeater_dmr_id=123456
           # params for configuration reporting
-          - color_code=
-          - latitude=
-          - longitude=
-          - antenna_height=
+          - color_code=01
+          - latitude=53.32300
+          - longitude=-0.94200
+          - antenna_height=20
           # 20 ascii letters, will be trimmed if exceeded
-          - location=
-          - description=
+          - location=location
+          - description=country
           # use these to override params read out of repeater
-          - rx_freq=
-          - tx_freq=
-          - tx_power=
+          - rx_freq=430712000
+          - tx_freq=439712000
+          - tx_power=20
           # 1 = only TS1, 2 = only TS2, 3 = TS1 and TS2
           - timeslots=3
-
-        image: 'RYSEN-HYT:latest'
+        image: 'shaymez/rysen-hyt:latest'
         #Container will persist over reboots
         restart: "unless-stopped"
         networks:
-           - app_net
-      
+            app_net:
+              ipv4_address: 172.16.238.60      
 networks:
   app_net:
     driver: bridge
