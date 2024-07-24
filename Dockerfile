@@ -8,7 +8,7 @@ RUN adduser -D -u 54000 radio && \
         pip cache purge && \
 	pip install puresnmp==1.10.2 && \
         pip install importlib-metadata && \
-	pip install hytera-homebrew-bridge==2021.3rc1 && \
+	pip install hytera-homebrew-bridge && \
 	cd /opt	 && \
 	git clone https://github.com/g4klx/DMRGateway.git && \
 	cd DMRGateway && \
